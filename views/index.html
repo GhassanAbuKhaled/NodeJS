@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <link rel="stylesheet" href="main.css" />
+    <style>.mainTitle{
+        width: 100%;
+        height: 30%;
+        background-color:beige;
+        margin: 20px auto ;
+        display: flex;
+        justify-content:center;
+        letter-spacing:1px;
+        font-size: 40px ;
+    }
+
+    .MainFaecheContainer  {
+
+        width: 100%;
+        border: 1px solid;
+        margin:20px auto ;
+        /* display: flex;
+        justify-content:center; */
+
+    }
+
+    .NeunFaecheContainer{
+        width: 80%;
+        height: 35%;
+        border: 1px solid;
+        margin:20px auto ;
+        display: block;
+
+    }
+
+    .NeunFachContainer{
+        width: 60%;
+        background-color: aliceblue;
+        display:flex;
+        border: 1px solid;
+        margin:2% ;
+        padding: 10px;
+
+    }
+
+    .FachName{
+        width: 50%;
+    }
+    .FachNote{
+        width: 20%;
+    }
+
+    .AddBtn{
+
+        width: 20%;
+        height: 30px;
+        display: flex;
+        margin:2%;
+        background-color: #fff;
+        justify-content:center;
+        border: 1px solid;
+        border-radius: 4px;
+
+    }
+
+    .AddSpan{
+        text-align: center;
+        margin:  auto;
+    }
+    .AddBtn:hover {
+        background-color: #4b5af3 !important;
+        color: #e0e9fc !important;
+        cursor: pointer;
+    }
+
+    .swalcontent{
+
+        width: 100%;
+        display: block;
+
+
+    }
+
+    .name , .leistungspunkte , .note{
+        display: flex;
+        justify-content:space-between;
+        margin: 20px auto;
+
+    }</style>
+    <title>Document</title>
+</head>
+<body>
+
+<div class="mainTitle">UNI NOTE</div>
+
+<script src="main.js"></script>
+<script>let FaecheNameFor9 = [
+    ["ASB", 2.0],
+    ["AUD", 4.0],
+    ["INFO 1", 2.7],
+    ["Mathe A", 1.3],
+    ["Mathe B", 1.0],
+];
+let FaecheNameFor7 = [["EGI", 2.7]];
+let FaecheNameFor6 = [
+    ["BS", 2.7],
+    ["RN", 2.7],
+    [" Mathe For INFO 1", 1.3],
+    ["GDR", 2.3],
+    ["OOP", 2.0],
+    ["SWT Praktikum", 1.3],
+    ["Krypto", 3.7],
+    ["WUG", 4.0],
+];
+
+let FaecheNameFor5 = [["GDI", 2.3]];
+const main_faeche_container = document.createElement("div");
+main_faeche_container.className = "MainFaecheContainer";
+
+(function startAll() {start();})();
+function start() {
+
+
+    $(".mainTitle").after(main_faeche_container);
+    AddFaeche( FaecheNameFor9, "neun");
+    AddFaeche(FaecheNameFor7, "sieben");
+    AddFaeche( FaecheNameFor6, "sechs");
+    AddFaeche( FaecheNameFor5, "fuenf");
+    AddGesamteNote();
+};
+
+function AddFaeche(FacherArray, leistungspunkte) {
+    const neun_faeche_container = document.createElement("div");
+    neun_faeche_container.className = "NeunFaecheContainer";
+    neun_faeche_container.id = leistungspunkte;
+    main_faeche_container.appendChild(neun_faeche_container);
+
+    for (let i = 0; i < FacherArray.length; i++) {
+        const neun_fach_container = document.createElement("div");
+        neun_fach_container.className = "NeunFachContainer";
+
+        neun_fach_container.innerHTML = `
+              <div class = "FachName">${FacherArray[i][0]}</div>
+              <input type="number" class = "FachNote" value=${
+            FacherArray[i][1]
+        } id = ${leistungspunkte + i}
+             min="1" max="4">
+              `;
+
+        neun_faeche_container.appendChild(neun_fach_container);
+        WatchNoteId(i, leistungspunkte);
+    }
+}
+
+function AddGesamteNote() {
+    const neun_faeche_container = document.createElement("div");
+    neun_faeche_container.className = "NeunFaecheContainer";
+    const neun_fach_container = document.createElement("div");
+    neun_fach_container.className = "NeunFachContainer";
+    const AddBtn = document.createElement("button");
+    AddBtn.className = "AddBtn";
+    AddBtn.id = "Add";
+    AddBtn.innerHTML = `<span class ="AddSpan"> Fach Add</span>`;
+
+    neun_fach_container.innerHTML = `
+              <div class = "FachName" id = "GesamtNote">Gesamte Note :  ${GesamteNoteBerechnen()}</div>
+              `;
+
+    neun_faeche_container.appendChild(neun_fach_container);
+    neun_faeche_container.appendChild(AddBtn);
+    main_faeche_container.appendChild(neun_faeche_container);
+
+    WatchAddButton();
+}
+
+function GesamteNoteBerechnen() {
+    let GesamtNote = 0;
+
+    for (let i = 0; i < FaecheNameFor6.length; i++) {
+        GesamtNote += 6 * FaecheNameFor6[i][1];
+
+        if (i < FaecheNameFor9.length) GesamtNote += 9 * FaecheNameFor9[i][1];
+        if (i < FaecheNameFor7.length) GesamtNote += 7 * FaecheNameFor7[i][1];
+        if (i < FaecheNameFor5.length) GesamtNote += 5 * FaecheNameFor5[i][1];
+    }
+
+    GesamtNote =
+        GesamtNote /
+        (9 * FaecheNameFor9.length +
+            6 * FaecheNameFor6.length +
+            7 * FaecheNameFor7.length +
+            5 * FaecheNameFor5.length);
+
+    $("#GesamtNote").text("Gesamt Note: " + GesamtNote);
+
+    return GesamtNote;
+}
+
+function WatchNoteId(Id, LP) {
+    $("#" + LP + Id).on("change", function () {
+        if (LP == "sechs") FaecheNameFor6[Id][1] = this.value;
+        if (LP == "sieben") FaecheNameFor7[Id][1] = this.value;
+        if (LP == "fuenf") FaecheNameFor5[Id][1] = this.value;
+        if (LP == "neun") FaecheNameFor9[Id][1] = this.value;
+
+        GesamteNoteBerechnen();
+    });
+}
+
+function WatchAddButton() {
+    $("#Add").on("click", function () {
+        const div = document.createElement("div");
+        div.className = "swalcontent";
+        div.innerHTML = `
+                 <div class="name"><label>Name (4 to 8 characters) :</label>
+                 <input type="text" id = "swalName" minlength="4" maxlength="8" size="9"></div>
+
+                 <div class="leistungspunkte">Leistungspunkte :
+                 <input type="number" class = "FachNote" id = "swalLeistungspunkte"
+               min="3" max="15">
+               </div>
+
+
+                 <div class="note"> Note : <input type="number" class = "FachNote"  id = "swalNote"
+
+               min="1" max="4"></div>
+               `;
+        swal({
+            title: "Fach Add",
+            content: div,
+        }).then((Ok) => {
+            if(Ok)
+            {
+
+                if($("#swalLeistungspunkte").val() == 9){
+                    FaecheNameFor9.push( [$("#swalName").val(),$("#swalNote").val()]);
+                    $(".MainFaecheContainer").empty();
+                    start();
+                    GesamteNoteBerechnen();
+                }
+
+                if($("#swalLeistungspunkte").val() == 7){
+                    FaecheNameFor7.push( [$("#swalName").val(),$("#swalNote").val()]);
+                    $(".MainFaecheContainer").empty();
+                    start();
+                    GesamteNoteBerechnen();
+                }
+
+                if($("#swalLeistungspunkte").val() == 6){
+                    FaecheNameFor6.push( [$("#swalName").val(),$("#swalNote").val()]);
+                    $(".MainFaecheContainer").empty();
+                    start();
+                    GesamteNoteBerechnen();
+                }
+
+                if($("#swalLeistungspunkte").val() == 5){
+                    FaecheNameFor5.push( [$("#swalName").val(),$("#swalNote").val()]);
+                    $(".MainFaecheContainer").empty();
+                    start();
+                    GesamteNoteBerechnen();
+                }
+            }
+        });
+
+    });
+}
+</script>
+</body>
+</html>
